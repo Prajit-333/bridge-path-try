@@ -1,0 +1,7 @@
+{
+  "name": "BridgePath - Speech & Special Ed",
+  "description": "A comprehensive AAC communication, speech practice, and therapy management platform for children, parents, and therapists.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
