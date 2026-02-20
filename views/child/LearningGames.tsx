@@ -1,15 +1,315 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+const SortingGame: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  const words = ['CAT', 'DOG', 'BIRD', 'FISH', 'APPLE'];
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [jumbled, setJumbled] = useState<{ id: number; char: string; used: boolean }[]>([]);
+  const [selected, setSelected] = useState<{ id: number; char: string }[]>([]);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const currentWord = words[currentWordIndex];
+
+  useEffect(() => {
+    startNewWord();
+  }, [currentWordIndex]);
+
+  const startNewWord = () => {
+    const chars = currentWord.split('');
+    // Simple shuffle
+    for (let i = chars.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [chars[i], chars[j]] = [chars[j], chars[i]];
+    }
+    setJumbled(chars.map((char, index) => ({ id: index, char, used: false })));
+    setSelected([]);
+    setIsSuccess(false);
+  };
+
+  const handleSelect = (item: { id: number; char: string; used: boolean }) => {
+    if (item.used || isSuccess) return;
+    setJumbled(prev => prev.map(x => x.id === item.id ? { ...x, used: true } : x));
+    setSelected(prev => {
+      const newSelected = [...prev, { id: item.id, char: item.char }];
+      if (newSelected.length === currentWord.length) {
+        if (newSelected.map(x => x.char).join('') === currentWord) {
+          setIsSuccess(true);
+          setTimeout(() => {
+            if (currentWordIndex < words.length - 1) {
+              setCurrentWordIndex(prev => prev + 1);
+            } else {
+              setCurrentWordIndex(0); // loop back or show end screen
+            }
+          }, 1500);
+        } else {
+          // Reset if wrong
+          setTimeout(() => {
+            setJumbled(prev => prev.map(x => ({ ...x, used: false })));
+            setSelected([]);
+          }, 800);
+        }
+      }
+      return newSelected;
+    });
+  };
+
+  const handleDeselect = (item: { id: number; char: string }) => {
+    if (isSuccess) return;
+    setSelected(prev => prev.filter(x => x.id !== item.id));
+    setJumbled(prev => prev.map(x => x.id === item.id ? { ...x, used: false } : x));
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center p-6 w-full max-w-2xl mx-auto">
+      <div className="flex items-center justify-between w-full mb-8">
+        <button onClick={onBack} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200">
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h2 className="text-2xl font-bold text-slate-800">Word Sorting</h2>
+        <div className="w-10"></div>
+      </div>
+
+      <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 w-full text-center">
+        <h3 className="text-lg text-slate-500 mb-6">Spell the word correctly!</h3>
+        
+        {/* Selected Slots */}
+        <div className="flex justify-center gap-3 mb-10 min-h-[4rem]">
+          {Array.from({ length: currentWord.length }).map((_, i) => {
+            const sel = selected[i];
+            return (
+              <div 
+                key={i} 
+                onClick={() => sel && handleDeselect(sel)}
+                className={`w-16 h-16 rounded-xl border-2 flex items-center justify-center text-3xl font-bold cursor-pointer transition-all ${
+                  sel ? 'bg-primary text-white border-primary shadow-md' : 'border-dashed border-slate-300 bg-slate-50'
+                } ${isSuccess ? 'bg-green-500 border-green-500' : ''}`}
+              >
+                {sel ? sel.char : ''}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Jumbled Letters */}
+        <div className="flex justify-center gap-3 flex-wrap">
+          {jumbled.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => handleSelect(item)}
+              disabled={item.used}
+              className={`w-16 h-16 rounded-xl text-3xl font-bold transition-all ${
+                item.used 
+                  ? 'bg-slate-100 text-slate-300 scale-90 cursor-default' 
+                  : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-primary hover:text-primary shadow-sm hover:shadow-md hover:-translate-y-1'
+              }`}
+            >
+              {item.char}
+            </button>
+          ))}
+        </div>
+
+        {isSuccess && (
+          <div className="mt-8 text-green-500 font-bold text-xl animate-bounce">
+            Great Job!
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const MemoryGame: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  const emojis = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊'];
+  const [cards, setCards] = useState<{ id: number; emoji: string; isFlipped: boolean; isMatched: boolean }[]>([]);
+  const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
+  const [isLocked, setIsLocked] = useState(false);
+
+  useEffect(() => {
+    startNewGame();
+  }, []);
+
+  const startNewGame = () => {
+    const deck = [...emojis, ...emojis]
+      .sort(() => Math.random() - 0.5)
+      .map((emoji, index) => ({ id: index, emoji, isFlipped: false, isMatched: false }));
+    setCards(deck);
+    setFlippedIndices([]);
+    setIsLocked(false);
+  };
+
+  const handleCardClick = (index: number) => {
+    if (isLocked || cards[index].isFlipped || cards[index].isMatched) return;
+
+    const newCards = [...cards];
+    newCards[index].isFlipped = true;
+    setCards(newCards);
+
+    const newFlippedIndices = [...flippedIndices, index];
+    setFlippedIndices(newFlippedIndices);
+
+    if (newFlippedIndices.length === 2) {
+      setIsLocked(true);
+      const [firstIndex, secondIndex] = newFlippedIndices;
+      
+      if (newCards[firstIndex].emoji === newCards[secondIndex].emoji) {
+        // Match
+        setTimeout(() => {
+          setCards(prev => prev.map((card, i) => 
+            i === firstIndex || i === secondIndex ? { ...card, isMatched: true } : card
+          ));
+          setFlippedIndices([]);
+          setIsLocked(false);
+        }, 500);
+      } else {
+        // No match
+        setTimeout(() => {
+          setCards(prev => prev.map((card, i) => 
+            i === firstIndex || i === secondIndex ? { ...card, isFlipped: false } : card
+          ));
+          setFlippedIndices([]);
+          setIsLocked(false);
+        }, 1000);
+      }
+    }
+  };
+
+  const isWin = cards.length > 0 && cards.every(c => c.isMatched);
+
+  return (
+    <div className="flex flex-col items-center justify-center p-6 w-full max-w-2xl mx-auto">
+      <div className="flex items-center justify-between w-full mb-8">
+        <button onClick={onBack} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200">
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h2 className="text-2xl font-bold text-slate-800">Memory Match</h2>
+        <button onClick={startNewGame} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200" title="Restart">
+          <span className="material-symbols-outlined">refresh</span>
+        </button>
+      </div>
+
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 w-full max-w-md">
+        {cards.map((card, index) => (
+          <div 
+            key={card.id}
+            onClick={() => handleCardClick(index)}
+            className={`aspect-square rounded-xl cursor-pointer transition-all duration-300 transform-gpu preserve-3d ${
+              card.isFlipped || card.isMatched ? 'rotate-y-180' : ''
+            } ${card.isMatched ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            style={{ perspective: '1000px' }}
+          >
+            <div className={`w-full h-full absolute inset-0 backface-hidden rounded-xl shadow-sm border-2 border-slate-200 bg-white flex items-center justify-center transition-all duration-300 ${card.isFlipped || card.isMatched ? 'opacity-0' : 'opacity-100 hover:border-primary hover:shadow-md'}`}>
+              <span className="material-symbols-outlined text-4xl text-slate-300">help</span>
+            </div>
+            <div className={`w-full h-full absolute inset-0 backface-hidden rounded-xl shadow-md border-2 border-primary bg-primary/10 flex items-center justify-center transition-all duration-300 ${card.isFlipped || card.isMatched ? 'opacity-100' : 'opacity-0'}`}>
+              <span className="text-5xl">{card.emoji}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {isWin && (
+        <div className="mt-8 text-center animate-fade-in">
+          <h3 className="text-2xl font-bold text-green-500 mb-4">You found all pairs!</h3>
+          <button onClick={startNewGame} className="bg-primary text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-primary/90 transition-colors">
+            Play Again
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const StoriesAndRhymes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  const rhymes = [
+    { id: 1, title: 'Twinkle Twinkle Little Star', duration: '1:24', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+    { id: 2, title: 'Itsy Bitsy Spider', duration: '0:58', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+    { id: 3, title: 'Old MacDonald', duration: '2:15', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+  ];
+
+  const [currentAudio, setCurrentAudio] = useState<number | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const togglePlay = (id: number, url: string) => {
+    if (currentAudio === id) {
+      if (isPlaying) {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current?.play();
+        setIsPlaying(true);
+      }
+    } else {
+      setCurrentAudio(id);
+      setIsPlaying(true);
+      if (audioRef.current) {
+        audioRef.current.src = url;
+        audioRef.current.play();
+      }
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center p-6 w-full max-w-2xl mx-auto">
+      <div className="flex items-center justify-between w-full mb-8">
+        <button onClick={onBack} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200">
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h2 className="text-2xl font-bold text-slate-800">Stories & Rhymes</h2>
+        <div className="w-10"></div>
+      </div>
+
+      <audio ref={audioRef} onEnded={() => setIsPlaying(false)} />
+
+      <div className="w-full space-y-4">
+        {rhymes.map(rhyme => (
+          <div key={rhyme.id} className={`bg-white p-4 rounded-2xl shadow-sm border-2 transition-all flex items-center justify-between ${currentAudio === rhyme.id ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-200'}`}>
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${currentAudio === rhyme.id ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'}`}>
+                <span className="material-symbols-outlined">music_note</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800">{rhyme.title}</h3>
+                <p className="text-sm text-slate-500">{rhyme.duration}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => togglePlay(rhyme.id, rhyme.url)}
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${currentAudio === rhyme.id && isPlaying ? 'bg-primary text-white shadow-md' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            >
+              <span className="material-symbols-outlined text-2xl">
+                {currentAudio === rhyme.id && isPlaying ? 'pause' : 'play_arrow'}
+              </span>
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const LearningGames: React.FC = () => {
   const navigate = useNavigate();
+  const [activeGame, setActiveGame] = useState<'menu' | 'sorting' | 'memory' | 'rhymes'>('menu');
 
-  const levels = [
-    { id: 1, title: 'Foundational Sounds', desc: 'Vowel sounds and basic phonemes.', progress: 100, difficulty: 'Low', status: 'Complete' },
-    { id: 2, title: 'Matching Words', desc: 'Object-word association practice.', progress: 45, difficulty: 'Medium', status: 'In Progress' },
-    { id: 3, title: 'Sentence Building', desc: 'Simple subject-verb-object structures.', progress: 0, difficulty: 'High', status: 'Locked' },
+  const games = [
+    { id: 'sorting', title: 'Word Sorting', desc: 'Arrange the jumbled letters to form words.', icon: 'sort_by_alpha', color: 'bg-blue-500' },
+    { id: 'memory', title: 'Memory Match', desc: 'Find the matching pairs of cards.', icon: 'style', color: 'bg-green-500' },
+    { id: 'rhymes', title: 'Stories & Rhymes', desc: 'Listen to fun rhymes and stories.', icon: 'headphones', color: 'bg-purple-500' },
   ];
+
+  if (activeGame === 'sorting') return <SortingGame onBack={() => setActiveGame('menu')} />;
+  if (activeGame === 'memory') return <MemoryGame onBack={() => setActiveGame('menu')} />;
+  if (activeGame === 'rhymes') return <StoriesAndRhymes onBack={() => setActiveGame('menu')} />;
 
   return (
     <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col">
@@ -27,45 +327,23 @@ const LearningGames: React.FC = () => {
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 max-w-2xl mx-auto w-full space-y-4">
-        {levels.map((level) => (
-          <div key={level.id} className={`bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden ${level.status === 'Locked' ? 'opacity-60 grayscale' : ''}`}>
-            <div className="p-5">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <span className="text-xs font-semibold uppercase text-primary/70">Level {level.id}</span>
-                  <h2 className="text-xl font-bold mt-0.5">{level.title}</h2>
-                </div>
-                <div className="flex gap-0.5 text-primary">
-                  <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>signal_cellular_alt</span>
-                  <span className="text-xs font-medium self-center ml-1 text-slate-500">{level.difficulty}</span>
-                </div>
+        {games.map((game) => (
+          <div 
+            key={game.id} 
+            onClick={() => setActiveGame(game.id as any)}
+            className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer hover:shadow-md transition-shadow group"
+          >
+            <div className="p-5 flex items-center gap-5">
+              <div className={`w-16 h-16 rounded-2xl ${game.color} text-white flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform`}>
+                <span className="material-symbols-outlined text-3xl">{game.icon}</span>
               </div>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">{level.desc}</p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-end">
-                  <span className={`text-xs font-medium ${level.status === 'Complete' ? 'text-green-500' : 'text-slate-500'}`}>{level.status}</span>
-                  <span className="text-xs font-bold">{level.progress}%</span>
-                </div>
-                <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full transition-all duration-1000 ${level.status === 'Complete' ? 'bg-green-500' : 'bg-primary'}`} 
-                    style={{ width: `${level.progress}%` }}
-                  ></div>
-                </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold mb-1">{game.title}</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">{game.desc}</p>
               </div>
-            </div>
-            <div className="px-5 py-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-700 flex justify-end">
-              {level.status === 'Locked' ? (
-                <div className="flex items-center gap-2 text-slate-400 text-xs">
-                  <span className="material-symbols-outlined text-sm">lock</span>
-                  <span>Locked</span>
-                </div>
-              ) : (
-                <button className="bg-primary text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-primary/90 flex items-center gap-2">
-                  {level.status === 'Complete' ? 'Review' : 'Continue'} 
-                  <span className="material-symbols-outlined text-sm">{level.status === 'Complete' ? 'refresh' : 'play_arrow'}</span>
-                </button>
-              )}
+              <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-colors">
+                <span className="material-symbols-outlined">play_arrow</span>
+              </div>
             </div>
           </div>
         ))}
