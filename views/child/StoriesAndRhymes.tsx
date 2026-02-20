@@ -7,7 +7,7 @@ const StoriesAndRhymes: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'rhymes' | 'stories'>('rhymes');
 
     const rhymes = [
-        { id: 1, title: 'Twinkle Twinkle Little Star', duration: '1:24', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+        { id: 1, title:'Baa Baa Black Sheep', duration: '1:24', url: 'https://res.cloudinary.com/djudf1lfv/video/upload/v1771589269/audio_evolv1_fhxn4r.mp3' },
         { id: 2, title: 'Itsy Bitsy Spider', duration: '0:58', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
         { id: 3, title: 'Old MacDonald', duration: '2:15', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
     ];
@@ -15,17 +15,17 @@ const StoriesAndRhymes: React.FC = () => {
     const stories = [
         {
             id: 1,
+            title: 'The Thirsty Crow',
+            desc: 'Smart thinking helps a crow find water.',
+            videoUrl: 'https://res.cloudinary.com/djudf1lfv/video/upload/v1771589635/Thirsty_Crow_Story_in_English___Moral_stories_for_Kids___Bedtime_Stories_for_Children_720P_HD_oh0vyo.mp4',
+            thumbnail: 'https://cdn.dribbble.com/userupload/42447740/file/original-4ac4c263170ae40af25010731d158347.jpg?resize=1200x900&vertical=center'
+        },
+        {
+            id: 2,
             title: 'The Lion and the Mouse',
             desc: 'A story about kindness and friendship.',
             videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
             thumbnail: 'https://picsum.photos/seed/lion/400/225'
-        },
-        {
-            id: 2,
-            title: 'The Thirsty Crow',
-            desc: 'Smart thinking helps a crow find water.',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-            thumbnail: 'https://picsum.photos/seed/crow/400/225'
         },
     ];
 
