@@ -7,6 +7,7 @@ import ChildDashboard from './views/child/ChildDashboard';
 import AACBoard from './views/child/AACBoard';
 import SpeechPractice from './views/child/SpeechPractice';
 import LearningGames from './views/child/LearningGames';
+import StoriesAndRhymes from './views/child/StoriesAndRhymes';
 import ChildProgress from './views/child/ChildProgress';
 import ParentDashboard from './views/parent/ParentDashboard';
 import TherapistDashboard from './views/therapist/TherapistDashboard';
@@ -32,12 +33,13 @@ const App: React.FC = () => {
     <HashRouter>
       <Routes>
         <Route path="/login" element={<LoginView onLogin={(role) => setUserRole(role)} />} />
-        
+
         {/* Child Routes */}
         <Route path="/child" element={userRole === 'Child' ? <ChildDashboard /> : <Navigate to="/login" />} />
         <Route path="/child/aac" element={<AACBoard />} />
         <Route path="/child/speech" element={<SpeechPractice />} />
         <Route path="/child/games" element={<LearningGames />} />
+        <Route path="/child/stories" element={<StoriesAndRhymes />} />
         <Route path="/child/progress" element={<ChildProgress />} />
 
         {/* Parent Routes */}

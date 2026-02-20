@@ -9,7 +9,7 @@ const ChildDashboard: React.FC = () => {
     { title: 'Communication Board', icon: 'chat_bubble', color: 'blue', path: '/child/aac' },
     { title: 'Speech Practice', icon: 'mic', color: 'green', path: '/child/speech' },
     { title: 'Learning Games', icon: 'extension', color: 'orange', path: '/child/games' },
-    { title: 'Stories & Rhymes', icon: 'menu_book', color: 'purple', path: '/child/games' },
+    { title: 'Stories & Rhymes', icon: 'menu_book', color: 'purple', path: '/child/stories' },
   ];
 
   return (
