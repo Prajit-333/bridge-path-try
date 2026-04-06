@@ -22,6 +22,17 @@ const AdminDashboard: React.FC = () => {
   const [userFilter, setUserFilter] = useState<UserTypeFilter>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const adminColors = {
+    bg: '#e8edeb',
+    header: '#0f5a49',
+    headerDark: '#0b4a3c',
+    accent: '#1fc79e',
+    accentSoft: '#e5f6f1',
+    title: '#0c3f33',
+    muted: '#8fa1b6',
+    border: '#dbe6e9',
+  };
   
   // Local state for users to allow adding/deleting
   const [users, setUsers] = useState<AdminUser[]>([
@@ -81,13 +92,17 @@ const AdminDashboard: React.FC = () => {
           { label: 'Parents', val: '850', trend: '+5%', icon: 'family_restroom' },
           { label: 'Students', val: '920', trend: '+8%', icon: 'child_care' },
         ].map((stat, i) => (
-          <div key={i} className="flex flex-col gap-1 rounded-xl p-4 border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800 shadow-sm">
+          <div
+            key={i}
+            className="flex flex-col gap-1 rounded-[2rem] p-4 border shadow-sm"
+            style={i === 0 ? { backgroundColor: adminColors.header, borderColor: adminColors.headerDark } : { backgroundColor: '#ffffff', borderColor: adminColors.border }}
+          >
             <div className="flex items-center gap-1.5 mb-1 opacity-60">
-               <span className="material-symbols-outlined text-xs">{stat.icon}</span>
-               <p className="text-[10px] font-bold uppercase tracking-widest">{stat.label}</p>
+               <span className="material-symbols-outlined text-xs" style={{ color: i === 0 ? '#bfe8de' : adminColors.muted }}>{stat.icon}</span>
+               <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: i === 0 ? '#bfe8de' : '#7f94ae' }}>{stat.label}</p>
             </div>
-            <p className="text-2xl font-black">{stat.val}</p>
-            <div className="flex items-center gap-1 text-emerald-600 text-[10px] font-black">
+            <p className="text-2xl font-black" style={{ color: i === 0 ? '#ffffff' : adminColors.title }}>{stat.val}</p>
+            <div className="flex items-center gap-1 text-[10px] font-black" style={{ color: adminColors.accent }}>
               <span className="material-symbols-outlined text-[12px]">trending_up</span>
               <span>{stat.trend}</span>
             </div>
@@ -95,7 +110,7 @@ const AdminDashboard: React.FC = () => {
         ))}
       </section>
 
-      <section className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+      <section className="bg-white p-5 rounded-2xl border shadow-sm" style={{ borderColor: adminColors.border }}>
         <h3 className="text-sm font-bold mb-6 text-slate-500 uppercase tracking-widest">Platform Growth</h3>
         <div className="h-48 w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -105,17 +120,17 @@ const AdminDashboard: React.FC = () => {
                 cursor={{fill: 'transparent'}}
                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
               />
-              <Bar dataKey="users" fill="#4a8fe3" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="users" fill="#1fc79e" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </section>
 
-      <section className="bg-primary/5 p-4 rounded-xl border border-primary/10">
-        <h4 className="text-xs font-black text-primary uppercase mb-2">System Status</h4>
+      <section className="p-4 rounded-xl border" style={{ backgroundColor: '#ecfaf6', borderColor: '#bceadb' }}>
+        <h4 className="text-xs font-black uppercase mb-2" style={{ color: '#15876a' }}>System Status</h4>
         <div className="flex items-center gap-2">
-          <div className="size-2 bg-emerald-500 rounded-full animate-pulse"></div>
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">All systems operational</span>
+          <div className="size-2 rounded-full animate-pulse" style={{ backgroundColor: '#1fc79e' }}></div>
+          <span className="text-sm font-medium text-slate-700">All systems operational</span>
         </div>
       </section>
     </div>
@@ -127,7 +142,8 @@ const AdminDashboard: React.FC = () => {
         <div className="relative flex-1">
           <span className="material-symbols-outlined absolute left-3 top-3 text-gray-400">search</span>
           <input 
-            className="w-full h-12 rounded-xl bg-gray-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary/50 pl-11 pr-4 text-sm dark:text-white" 
+            className="w-full h-12 rounded-xl bg-white border border-slate-200 focus:ring-2 pl-11 pr-4 text-sm" 
+            style={{ borderColor: adminColors.border, outlineColor: adminColors.accent }}
             placeholder="Filter by name or email..." 
             type="text"
             value={searchQuery}
@@ -136,7 +152,8 @@ const AdminDashboard: React.FC = () => {
         </div>
         <button 
           onClick={() => setIsAddModalOpen(true)}
-          className="h-12 w-12 flex items-center justify-center bg-primary text-white rounded-xl shadow-lg shadow-primary/20 active:scale-90 transition-transform"
+          className="h-12 w-12 flex items-center justify-center text-white rounded-xl shadow-lg active:scale-90 transition-transform"
+          style={{ backgroundColor: adminColors.accent }}
         >
           <span className="material-symbols-outlined">person_add</span>
         </button>
@@ -149,9 +166,10 @@ const AdminDashboard: React.FC = () => {
             onClick={() => setUserFilter(tab)}
             className={`px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${
               userFilter === tab 
-              ? 'bg-primary text-white shadow-md' 
-              : 'bg-white dark:bg-slate-800 text-slate-400 hover:text-slate-600'
+              ? 'text-white shadow-md' 
+              : 'bg-white text-slate-400 hover:text-slate-600'
             }`}
+            style={userFilter === tab ? { backgroundColor: adminColors.accent } : { border: `1px solid ${adminColors.border}` }}
           >
             {tab}
           </button>
@@ -169,7 +187,7 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <button className="p-2 text-slate-400 hover:text-primary transition-colors">
+              <button className="p-2 text-slate-400 transition-colors" style={{ color: adminColors.accent }}>
                 <span className="material-symbols-outlined text-xl">edit</span>
               </button>
               <button 
@@ -194,7 +212,7 @@ const AdminDashboard: React.FC = () => {
         { title: 'Story Library', count: '45 Books', icon: 'menu_book', color: 'text-purple-500' },
         { title: 'Speech Exercises', count: '80 Phrases', icon: 'mic', color: 'text-green-500' },
       ].map((item, i) => (
-        <button key={i} className="w-full flex items-center justify-between p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm hover:border-primary/50 transition-all">
+        <button key={i} className="w-full flex items-center justify-between p-4 bg-white rounded-xl border shadow-sm transition-all" style={{ borderColor: adminColors.border }}>
           <div className="flex items-center gap-4">
             <div className={`size-10 rounded-lg bg-slate-50 dark:bg-slate-900 flex items-center justify-center ${item.color}`}>
               <span className="material-symbols-outlined">{item.icon}</span>
@@ -212,7 +230,7 @@ const AdminDashboard: React.FC = () => {
 
   const renderSettings = () => (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-100 dark:border-slate-700">
+      <div className="bg-white rounded-xl p-4 border" style={{ borderColor: adminColors.border }}>
         <h4 className="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest">Global Preferences</h4>
         <div className="space-y-1">
           {[
@@ -225,7 +243,7 @@ const AdminDashboard: React.FC = () => {
                 <span className="material-symbols-outlined text-slate-400">{s.icon}</span>
                 <span className="text-sm font-medium">{s.label}</span>
               </div>
-              <div className={`w-10 h-5 rounded-full relative transition-colors ${s.enabled ? 'bg-primary' : 'bg-slate-200'}`}>
+              <div className="w-10 h-5 rounded-full relative transition-colors" style={{ backgroundColor: s.enabled ? adminColors.accent : '#e2e8f0' }}>
                 <div className={`absolute top-0.5 size-4 bg-white rounded-full shadow-sm transition-transform ${s.enabled ? 'right-0.5' : 'left-0.5'}`}></div>
               </div>
             </div>
@@ -233,7 +251,7 @@ const AdminDashboard: React.FC = () => {
         </div>
       </div>
       
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-100 dark:border-slate-700">
+      <div className="bg-white rounded-xl p-4 border" style={{ borderColor: adminColors.border }}>
         <h4 className="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest">Admin Account</h4>
         <button className="w-full text-left py-2 text-sm font-medium flex items-center gap-3">
           <span className="material-symbols-outlined text-slate-400">security</span>
@@ -245,7 +263,7 @@ const AdminDashboard: React.FC = () => {
         </button>
       </div>
 
-      <button onClick={() => navigate('/login')} className="w-full py-4 bg-red-50 text-red-500 font-bold text-sm rounded-xl flex items-center justify-center gap-2">
+      <button onClick={() => navigate('/login')} className="w-full py-4 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2" style={{ backgroundColor: adminColors.header }}>
         <span className="material-symbols-outlined">logout</span>
         LOGOUT SYSTEM
       </button>
@@ -253,16 +271,16 @@ const AdminDashboard: React.FC = () => {
   );
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display min-h-screen text-slate-900 dark:text-slate-100">
-      <div className="relative flex min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto bg-white dark:bg-slate-900 shadow-2xl">
-        <header className="flex items-center bg-white dark:bg-slate-900 px-5 py-5 justify-between border-b border-gray-100 dark:border-slate-800 sticky top-0 z-30">
+    <div className="font-display min-h-screen text-slate-900" style={{ backgroundColor: adminColors.bg }}>
+      <div className="relative flex min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl" style={{ backgroundColor: adminColors.bg }}>
+        <header className="flex items-center px-5 py-5 justify-between border-b sticky top-0 z-30" style={{ backgroundColor: adminColors.header, borderColor: adminColors.headerDark }}>
           <div>
-            <h2 className="text-xl font-black leading-none tracking-tight">Admin</h2>
-            <p className="text-[10px] text-primary font-black uppercase tracking-widest mt-1">{activeNav}</p>
+            <h2 className="text-xl font-black leading-none tracking-tight text-white">Admin Console</h2>
+            <p className="text-[10px] font-black uppercase tracking-widest mt-1" style={{ color: '#a7d8cc' }}>{activeNav}</p>
           </div>
-          <button className="relative w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+          <button className="relative w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: adminColors.headerDark, color: '#bfe8de' }}>
             <span className="material-symbols-outlined">notifications</span>
-            <div className="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></div>
+            <div className="absolute top-2.5 right-2.5 size-2 rounded-full border-2" style={{ backgroundColor: adminColors.accent, borderColor: adminColors.headerDark }}></div>
           </button>
         </header>
 
@@ -273,7 +291,7 @@ const AdminDashboard: React.FC = () => {
           {activeNav === 'Settings' && renderSettings()}
         </main>
 
-        <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t border-gray-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-6 pb-8 pt-3 z-40">
+        <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t bg-white/95 backdrop-blur-md px-6 pb-8 pt-3 z-40" style={{ borderColor: adminColors.border }}>
           <div className="flex justify-between items-center">
             {[
               { id: 'Stats', icon: 'grid_view' },
@@ -284,7 +302,8 @@ const AdminDashboard: React.FC = () => {
               <button 
                 key={tab.id}
                 onClick={() => setActiveNav(tab.id as AdminNavTab)}
-                className={`flex flex-col items-center gap-1 transition-all ${activeNav === tab.id ? 'text-primary scale-110' : 'text-slate-400 opacity-60'}`}
+                className={`flex flex-col items-center gap-1 transition-all ${activeNav === tab.id ? 'scale-110' : 'text-slate-400 opacity-60'}`}
+                style={activeNav === tab.id ? { color: adminColors.header } : undefined}
               >
                 <span className="material-symbols-outlined" style={{ fontVariationSettings: activeNav === tab.id ? "'FILL' 1" : "" }}>
                   {tab.icon}
@@ -298,31 +317,31 @@ const AdminDashboard: React.FC = () => {
         {/* Add Therapist Modal */}
         {isAddModalOpen && (
           <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300">
+            <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-black">Add New Therapist</h3>
-                <button onClick={() => setIsAddModalOpen(false)} className="size-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                <button onClick={() => setIsAddModalOpen(false)} className="size-8 rounded-full bg-slate-100 flex items-center justify-center">
                   <span className="material-symbols-outlined text-sm">close</span>
                 </button>
               </div>
               <form onSubmit={handleAddTherapist} className="space-y-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Full Name</label>
-                  <input name="name" required className="w-full h-12 px-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary/20" placeholder="e.g. Dr. Jane Foster" />
+                  <input name="name" required className="w-full h-12 px-4 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-[#1fc79e]/20" placeholder="e.g. Dr. Jane Foster" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Address</label>
-                  <input name="email" type="email" required className="w-full h-12 px-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary/20" placeholder="jane@bridgepath.com" />
+                  <input name="email" type="email" required className="w-full h-12 px-4 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-[#1fc79e]/20" placeholder="jane@bridgepath.com" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Specialty</label>
-                  <select className="w-full h-12 px-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary/20 text-sm">
+                  <select className="w-full h-12 px-4 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-[#1fc79e]/20 text-sm">
                     <option>Speech Therapy</option>
                     <option>Occupational Therapy</option>
                     <option>Behavioral Therapy</option>
                   </select>
                 </div>
-                <button type="submit" className="w-full py-4 bg-primary text-white font-black rounded-xl shadow-lg shadow-primary/20 mt-4 active:scale-95 transition-transform uppercase tracking-widest">
+                <button type="submit" className="w-full py-4 text-white font-black rounded-xl shadow-lg mt-4 active:scale-95 transition-transform uppercase tracking-widest" style={{ backgroundColor: adminColors.accent }}>
                   Create Account
                 </button>
               </form>

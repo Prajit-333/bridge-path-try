@@ -24,15 +24,25 @@ const ChildProgress: React.FC = () => {
   ];
 
   return (
-    <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display">
-      <header className="p-6 pt-8 flex items-center justify-between bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm">
+    <div
+      className="min-h-screen flex flex-col font-display"
+      style={{
+        backgroundColor: '#f1f8e9',
+        backgroundImage:
+          'linear-gradient(rgba(241, 248, 233, 0.82), rgba(241, 248, 233, 0.82)), url(https://lh3.googleusercontent.com/aida/ADBb0uj-yIddZnneWgyGnYokHkeQsNRPGOzGrGo5IDEw5r_kpyCi7k9Fabwkqph3Sw9gwXYsFeubvH6D4K_bK96g1FPJyvp6ifQdfrAgnWxxgdI7jav3MEMPoI_I8aVfRkKn4PvkLMp4SGUCy5sC-iItTs9mkwqiMrswpaCZ4oSunKBRnHVNjoig9iYVAXOf8AHQBXe2OHkEbpMTT6MNXtXCD8dfoXZ0HH5_qeHmr3yIdG7ByMHSzOVFt7opjJKJMFXtSZHKQNbDKQHa9Q)',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+      }}
+    >
+      <header className="p-6 pt-8 flex items-center justify-between bg-white/85 backdrop-blur-md border-b border-white/60 shadow-sm">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/child')} className="size-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center">
+          <button onClick={() => navigate('/child')} className="size-10 rounded-full hover:bg-slate-100/70 flex items-center justify-center">
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <h1 className="text-xl font-bold">My Progress</h1>
         </div>
-        <div className="flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-full">
+        <div className="flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-full backdrop-blur-md border border-white/50">
            <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
            <span className="text-primary font-bold">1,250</span>
         </div>
@@ -40,7 +50,7 @@ const ChildProgress: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto p-4 max-w-md mx-auto w-full space-y-6 pb-24">
         {/* Weekly Chart */}
-        <section className="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <section className="bg-white/88 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-white/60">
           <div className="flex justify-between items-center mb-6">
             <h3 className="font-bold text-slate-800 dark:text-slate-100">This Week</h3>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Days</span>
@@ -67,11 +77,11 @@ const ChildProgress: React.FC = () => {
 
         {/* Stats Grid */}
         <section className="grid grid-cols-2 gap-4">
-          <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-2xl border border-green-100 dark:border-green-900/30 text-center">
+          <div className="bg-green-50/90 backdrop-blur-md p-4 rounded-2xl border border-white/60 text-center shadow-sm">
             <p className="text-2xl font-black text-green-600 dark:text-green-400">24</p>
             <p className="text-[10px] font-bold text-green-700/60 dark:text-green-300 uppercase">Activities</p>
           </div>
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-2xl border border-blue-100 dark:border-blue-900/30 text-center">
+          <div className="bg-blue-50/90 backdrop-blur-md p-4 rounded-2xl border border-white/60 text-center shadow-sm">
             <p className="text-2xl font-black text-blue-600 dark:text-blue-400">3</p>
             <p className="text-[10px] font-bold text-blue-700/60 dark:text-blue-300 uppercase">Day Streak</p>
           </div>
@@ -79,14 +89,14 @@ const ChildProgress: React.FC = () => {
 
         {/* Badges */}
         <section>
-          <h3 className="font-bold mb-4 px-1 text-slate-800 dark:text-slate-100">My Badges</h3>
+          <h3 className="font-bold mb-4 px-1 text-slate-800">My Badges</h3>
           <div className="grid grid-cols-2 gap-3">
             {badges.map((badge) => (
-              <div key={badge.id} className={`${badge.bg} dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center shadow-sm`}>
-                <div className={`size-12 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center mb-2 shadow-sm ${badge.color}`}>
+              <div key={badge.id} className={`${badge.bg} p-4 rounded-xl border border-white/60 flex flex-col items-center text-center shadow-sm backdrop-blur-md`}>
+                <div className={`size-12 rounded-full bg-white/95 flex items-center justify-center mb-2 shadow-sm ${badge.color}`}>
                   <span className="material-symbols-outlined !text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>{badge.icon}</span>
                 </div>
-                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200">{badge.name}</span>
+                <span className="text-[11px] font-bold text-slate-700">{badge.name}</span>
               </div>
             ))}
           </div>
@@ -94,14 +104,14 @@ const ChildProgress: React.FC = () => {
 
         {/* Activity Log */}
         <section>
-          <h3 className="font-bold mb-4 px-1 text-slate-800 dark:text-slate-100">Recent Activity</h3>
+          <h3 className="font-bold mb-4 px-1 text-slate-800">Recent Activity</h3>
           <div className="space-y-2">
             {[
               { type: 'Speech', name: 'Hello Practice', time: 'Today', icon: 'mic', color: 'green' },
               { type: 'AAC', name: 'Sent 5 Messages', time: 'Yesterday', icon: 'chat', color: 'blue' },
               { type: 'Game', name: 'Foundational Sounds', time: '2 days ago', icon: 'extension', color: 'orange' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+              <div key={i} className="flex items-center gap-4 p-3 bg-white/88 backdrop-blur-md rounded-xl shadow-sm border border-white/60">
                 <div className={`size-10 rounded-full flex items-center justify-center bg-${item.color}-50 text-${item.color}-500`}>
                   <span className="material-symbols-outlined text-xl">{item.icon}</span>
                 </div>
@@ -116,7 +126,7 @@ const ChildProgress: React.FC = () => {
         </section>
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-white/60 px-6 py-3 flex justify-between items-center z-50">
         <button onClick={() => navigate('/child')} className="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors">
           <span className="material-symbols-outlined">home</span>
           <span className="text-[10px] font-bold">HOME</span>

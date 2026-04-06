@@ -221,50 +221,183 @@ const LearningGames: React.FC = () => {
   const navigate = useNavigate();
   const [activeGame, setActiveGame] = useState<'menu' | 'sorting' | 'memory'>('menu');
 
-  const games = [
-    { id: 'sorting', title: 'Word Sorting', desc: 'Arrange the jumbled letters to form words.', icon: 'sort_by_alpha', color: 'bg-blue-500' },
-    { id: 'memory', title: 'Memory Match', desc: 'Find the matching pairs of cards.', icon: 'style', color: 'bg-green-500' },
+  const levels = [
+    {
+      id: 'sorting' as const,
+      level: 'Level 1',
+      title: 'Foundational Sounds',
+      desc: 'Focusing on vowel sounds and basic phonemes through interactive audio puzzles.',
+      status: 'Passed',
+      statusIcon: 'check_circle',
+      statusClass: 'bg-green-100 text-green-700',
+      icon: 'flutter_dash',
+      iconWrap: 'bg-blue-100',
+      iconColor: 'text-blue-500',
+      accent: 'border-l-leaf-green',
+      progressLabel: 'Complete',
+      progress: 100,
+      progressBar: 'from-leaf-green to-jungle-green',
+      footerBg: 'bg-leaf-green/5',
+      buttonClass: 'bg-jungle-green text-white hover:bg-jungle-green/90',
+      buttonText: 'Review',
+      buttonIcon: 'refresh',
+      clickable: true,
+    },
+    {
+      id: 'memory' as const,
+      level: 'Level 2',
+      title: 'Matching Words',
+      desc: 'Object-word association using visual cards and pronunciation practice.',
+      status: 'Active',
+      statusIcon: 'trending_up',
+      statusClass: 'bg-blue-50 text-blue-700 border border-blue-100',
+      icon: 'cruelty_free',
+      iconWrap: 'bg-orange-100',
+      iconColor: 'text-orange-500',
+      accent: 'border-l-orange-400',
+      progressLabel: 'Progress',
+      progress: 45,
+      progressBar: 'from-orange-400 to-orange-600',
+      footerBg: 'bg-orange-50',
+      buttonClass: 'bg-earth-brown text-white hover:brightness-105',
+      buttonText: 'Continue',
+      buttonIcon: 'play_arrow',
+      clickable: true,
+    },
+    {
+      id: 'locked' as const,
+      level: 'Level 3',
+      title: 'Sentence Building',
+      desc: 'Constructing simple sentences using subject-verb-object structures.',
+      status: '',
+      statusIcon: '',
+      statusClass: '',
+      icon: 'pest_control_rodent',
+      iconWrap: 'bg-gray-200',
+      iconColor: 'text-gray-500',
+      accent: 'border-l-gray-300',
+      progressLabel: 'Locked',
+      progress: 0,
+      progressBar: 'from-gray-300 to-gray-300',
+      footerBg: 'bg-black/5',
+      buttonClass: '',
+      buttonText: '',
+      buttonIcon: '',
+      clickable: false,
+    },
   ];
 
   if (activeGame === 'sorting') return <SortingGame onBack={() => setActiveGame('menu')} />;
   if (activeGame === 'memory') return <MemoryGame onBack={() => setActiveGame('menu')} />;
 
   return (
-    <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between">
+    <div
+      className="min-h-screen flex flex-col text-[#111417]"
+      style={{
+        backgroundColor: '#f1f8e9',
+        backgroundImage:
+          'linear-gradient(rgba(241, 248, 233, 0.85), rgba(241, 248, 233, 0.85)), url(https://lh3.googleusercontent.com/aida/ADBb0uj-yIddZnneWgyGnYokHkeQsNRPGOzGrGo5IDEw5r_kpyCi7k9Fabwkqph3Sw9gwXYsFeubvH6D4K_bK96g1FPJyvp6ifQdfrAgnWxxgdI7jav3MEMPoI_I8aVfRkKn4PvkLMp4SGUCy5sC-iItTs9mkwqiMrswpaCZ4oSunKBRnHVNjoig9iYVAXOf8AHQBXe2OHkEbpMTT6MNXtXCD8dfoXZ0HH5_qeHmr3yIdG7ByMHSzOVFt7opjJKJMFXtSZHKQNbDKQHa9Q)',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+      }}
+    >
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-leaf-green/20 px-4 py-3 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/child')} className="size-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center">
-            <span className="material-symbols-outlined">arrow_back</span>
+          <button onClick={() => navigate('/child')} className="size-10 rounded-full hover:bg-leaf-green/10 transition-colors flex items-center justify-center">
+            <span className="material-symbols-outlined text-jungle-green">arrow_back</span>
           </button>
-          <h1 className="text-lg font-bold">Learning Games</h1>
+          <h1 className="text-lg font-bold tracking-tight text-jungle-green">Learning Games</h1>
         </div>
-        <div className="bg-primary/10 px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-primary/20">
-          <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
-          <span className="text-primary font-bold text-sm">1,250</span>
+        <div className="bg-yellow-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-yellow-200">
+          <span className="material-symbols-outlined text-yellow-600 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
+          <span className="text-yellow-700 font-bold text-sm">1,250</span>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 max-w-2xl mx-auto w-full space-y-4">
-        {games.map((game) => (
+      <main className="flex-1 overflow-y-auto p-4 max-w-2xl mx-auto w-full space-y-6 relative">
+        <div className="absolute top-10 left-5 -z-10 opacity-30 animate-bounce">
+          <span className="material-symbols-outlined text-4xl text-leaf-green">eco</span>
+        </div>
+        <div className="absolute top-40 right-10 -z-10 opacity-30">
+          <span className="material-symbols-outlined text-5xl text-jungle-green">filter_vintage</span>
+        </div>
+
+        {levels.map((level) => (
           <div
-            key={game.id}
-            onClick={() => setActiveGame(game.id as any)}
-            className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer hover:shadow-md transition-shadow group"
+            key={level.id}
+            onClick={() => level.clickable && setActiveGame(level.id)}
+            className={`${level.clickable ? 'cursor-pointer hover:scale-[1.01]' : ''} rounded-2xl shadow-lg overflow-hidden transform transition-transform border-l-4 ${level.accent} ${
+              level.clickable ? 'bg-white/90 backdrop-blur-md border border-white/50' : 'bg-white/40 backdrop-blur-[4px] border border-white/30'
+            }`}
           >
-            <div className="p-5 flex items-center gap-5">
-              <div className={`w-16 h-16 rounded-2xl ${game.color} text-white flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform`}>
-                <span className="material-symbols-outlined text-3xl">{game.icon}</span>
+            <div className={`p-5 ${level.clickable ? '' : 'opacity-60'}`}>
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex items-center gap-3">
+                  <div className={`size-12 rounded-full ${level.iconWrap} flex items-center justify-center border-2 border-white shadow-sm overflow-hidden`}>
+                    <span className={`material-symbols-outlined ${level.iconColor} text-3xl`}>{level.icon}</span>
+                  </div>
+                  <div>
+                    <span className={`text-xs font-bold uppercase tracking-wider ${level.id === 'sorting' ? 'text-leaf-green' : level.id === 'memory' ? 'text-orange-500' : 'text-gray-500'}`}>
+                      {level.level}
+                    </span>
+                    <h2 className={`text-xl font-bold mt-0.5 ${level.clickable ? 'text-jungle-green' : 'text-gray-700'}`}>{level.title}</h2>
+                  </div>
+                </div>
+
+                {level.status && (
+                  <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${level.statusClass}`}>
+                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: level.id === 'sorting' ? "'FILL' 1" : undefined }}>
+                      {level.statusIcon}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase">{level.status}</span>
+                  </div>
+                )}
               </div>
-              <div className="flex-1">
-                <h2 className="text-xl font-bold mb-1">{game.title}</h2>
-                <p className="text-slate-500 dark:text-slate-400 text-sm">{game.desc}</p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-colors">
-                <span className="material-symbols-outlined">play_arrow</span>
+
+              <p className={`${level.clickable ? 'text-[#647487]' : 'text-gray-500'} text-sm mb-5 leading-relaxed pl-1`}>
+                {level.desc}
+              </p>
+
+              <div className="space-y-2">
+                <div className="flex justify-between items-end">
+                  <span className={`text-xs font-bold ${level.id === 'sorting' ? 'text-leaf-green' : level.id === 'memory' ? 'text-orange-500' : 'text-gray-400'}`}>
+                    {level.progressLabel}
+                  </span>
+                  <span className={`text-xs font-black ${level.clickable ? 'text-jungle-green' : 'text-gray-400'}`}>{level.progress}%</span>
+                </div>
+                <div className={`h-3 w-full rounded-full overflow-hidden border ${level.clickable ? 'bg-gray-200 border-gray-100' : 'bg-gray-200/50 border-gray-100/30'}`}>
+                  <div
+                    className={`h-full rounded-full bg-gradient-to-r ${level.progressBar}`}
+                    style={{ width: `${level.progress}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
+
+            {level.clickable ? (
+              <div className={`px-5 py-3 ${level.footerBg} border-t border-white/50 flex justify-end`}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveGame(level.id);
+                  }}
+                  className={`${level.buttonClass} px-6 py-2 rounded-xl font-bold text-sm shadow-sm transition-all flex items-center gap-2`}
+                >
+                  {level.buttonText}
+                  <span className="material-symbols-outlined text-sm">{level.buttonIcon}</span>
+                </button>
+              </div>
+            ) : (
+              <div className="px-5 py-3 bg-black/5 border-t border-white/20 flex justify-center items-center gap-2">
+                <span className="material-symbols-outlined text-gray-500 text-lg">lock</span>
+                <span className="text-xs font-bold text-gray-600 uppercase tracking-tight">Complete Level 2 to unlock</span>
+              </div>
+            )}
           </div>
         ))}
+
+        <div className="h-10"></div>
       </main>
     </div>
   );

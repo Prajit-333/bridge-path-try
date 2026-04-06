@@ -71,10 +71,20 @@ const StoriesAndRhymes: React.FC = () => {
     }, [activeTab]);
 
     return (
-        <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col">
-            <header className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between">
+        <div
+            className="min-h-screen flex flex-col"
+            style={{
+                backgroundColor: '#f1f8e9',
+                backgroundImage:
+                    'linear-gradient(rgba(241, 248, 233, 0.82), rgba(241, 248, 233, 0.82)), url(https://lh3.googleusercontent.com/aida/ADBb0uj-yIddZnneWgyGnYokHkeQsNRPGOzGrGo5IDEw5r_kpyCi7k9Fabwkqph3Sw9gwXYsFeubvH6D4K_bK96g1FPJyvp6ifQdfrAgnWxxgdI7jav3MEMPoI_I8aVfRkKn4PvkLMp4SGUCy5sC-iItTs9mkwqiMrswpaCZ4oSunKBRnHVNjoig9iYVAXOf8AHQBXe2OHkEbpMTT6MNXtXCD8dfoXZ0HH5_qeHmr3yIdG7ByMHSzOVFt7opjJKJMFXtSZHKQNbDKQHa9Q)',
+                backgroundSize: 'cover',
+                backgroundAttachment: 'fixed',
+                backgroundPosition: 'center',
+            }}
+        >
+            <header className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-200/70 px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <button onClick={() => navigate('/child')} className="size-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center">
+                    <button onClick={() => navigate('/child')} className="size-10 rounded-full hover:bg-slate-100/70 flex items-center justify-center">
                         <span className="material-symbols-outlined">arrow_back</span>
                     </button>
                     <h1 className="text-lg font-bold">Stories & Rhymes</h1>
@@ -85,14 +95,14 @@ const StoriesAndRhymes: React.FC = () => {
             <div className="p-4 flex gap-4 max-w-2xl mx-auto w-full">
                 <button
                     onClick={() => setActiveTab('rhymes')}
-                    className={`flex-1 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'rhymes' ? 'bg-primary text-white shadow-md' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700'}`}
+                    className={`flex-1 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'rhymes' ? 'bg-primary text-white shadow-md' : 'bg-white/85 backdrop-blur-md text-slate-700 border border-white/60 shadow-sm'}`}
                 >
                     <span className="material-symbols-outlined">music_note</span>
                     Rhymes
                 </button>
                 <button
                     onClick={() => setActiveTab('stories')}
-                    className={`flex-1 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'stories' ? 'bg-primary text-white shadow-md' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700'}`}
+                    className={`flex-1 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'stories' ? 'bg-primary text-white shadow-md' : 'bg-white/85 backdrop-blur-md text-slate-700 border border-white/60 shadow-sm'}`}
                 >
                     <span className="material-symbols-outlined">videocam</span>
                     Stories
@@ -104,19 +114,19 @@ const StoriesAndRhymes: React.FC = () => {
                     <div className="w-full space-y-4">
                         <audio ref={audioRef} onEnded={() => setIsPlaying(false)} />
                         {rhymes.map(rhyme => (
-                            <div key={rhyme.id} className={`bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border-2 transition-all flex items-center justify-between ${currentAudio === rhyme.id ? 'border-primary bg-primary/5' : 'border-slate-100 dark:border-slate-700 hover:border-slate-200'}`}>
+                            <div key={rhyme.id} className={`bg-white/88 backdrop-blur-md p-4 rounded-2xl shadow-sm border-2 border-white/60 transition-all flex items-center justify-between ${currentAudio === rhyme.id ? 'border-primary bg-primary/10' : 'hover:border-slate-200/70'}`}>
                                 <div className="flex items-center gap-4">
-                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${currentAudio === rhyme.id ? 'bg-primary text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500'}`}>
+                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${currentAudio === rhyme.id ? 'bg-primary text-white' : 'bg-slate-100/90 text-slate-500'}`}>
                                         <span className="material-symbols-outlined">music_note</span>
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-slate-800 dark:text-slate-100">{rhyme.title}</h3>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">{rhyme.duration}</p>
+                                        <h3 className="font-bold text-slate-800">{rhyme.title}</h3>
+                                        <p className="text-sm text-slate-500">{rhyme.duration}</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => togglePlay(rhyme.id, rhyme.url)}
-                                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${currentAudio === rhyme.id && isPlaying ? 'bg-primary text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}`}
+                                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${currentAudio === rhyme.id && isPlaying ? 'bg-primary text-white shadow-md' : 'bg-slate-100/90 text-slate-700 hover:bg-slate-200/90'}`}
                                 >
                                     <span className="material-symbols-outlined text-2xl">
                                         {currentAudio === rhyme.id && isPlaying ? 'pause' : 'play_arrow'}
@@ -128,8 +138,8 @@ const StoriesAndRhymes: React.FC = () => {
                 ) : (
                     <div className="w-full space-y-6">
                         {stories.map(story => (
-                            <div key={story.id} className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-                                <div className="aspect-video bg-slate-100 dark:bg-slate-900 relative">
+                            <div key={story.id} className="bg-white/88 backdrop-blur-md rounded-2xl shadow-sm border border-white/60 overflow-hidden">
+                                <div className="aspect-video bg-slate-100 relative">
                                     <video
                                         src={story.videoUrl}
                                         poster={story.thumbnail}
@@ -138,8 +148,8 @@ const StoriesAndRhymes: React.FC = () => {
                                     />
                                 </div>
                                 <div className="p-4">
-                                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{story.title}</h3>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{story.desc}</p>
+                                    <h3 className="text-lg font-bold text-slate-800">{story.title}</h3>
+                                    <p className="text-sm text-slate-500 mt-1">{story.desc}</p>
                                 </div>
                             </div>
                         ))}

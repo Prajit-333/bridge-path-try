@@ -41,6 +41,7 @@ const App: React.FC = () => {
         <Route path="/child/games" element={<LearningGames />} />
         <Route path="/child/stories" element={<StoriesAndRhymes />} />
         <Route path="/child/progress" element={<ChildProgress />} />
+        <Route path="/child/profile" element={<Navigate to="/child" />} />
 
         {/* Parent Routes */}
         <Route path="/parent" element={userRole === 'Parent' ? <ParentDashboard /> : <Navigate to="/login" />} />
@@ -53,6 +54,7 @@ const App: React.FC = () => {
         <Route path="/admin" element={userRole === 'Admin' ? <AdminDashboard /> : <Navigate to="/login" />} />
 
         <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </HashRouter>
   );
